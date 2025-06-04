@@ -1,0 +1,20 @@
+CREATE TABLE flights (
+    flight_id INT AUTO_INCREMENT PRIMARY KEY,
+    flight_number VARCHAR(10) NOT NULL,
+    departure_airport_id VARCHAR(30) NOT NULL,
+    arrival_airport_id VARCHAR(30) NOT NULL,
+    departure_time DATETIME NOT NULL,
+    arrival_time DATETIME NOT NULL,
+    duration_minutes INT NOT NULL,
+    base_price_economy DECIMAL(10, 2) NOT NULL,
+    base_price_business DECIMAL(10, 2) NOT NULL,
+    base_price_first_class DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(10) NOT NULL,
+    gate_number VARCHAR(10),
+    logo_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX (departure_time),
+    INDEX (arrival_time),
+    UNIQUE KEY (flight_number, departure_time)
+);
