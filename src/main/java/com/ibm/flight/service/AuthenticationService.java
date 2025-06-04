@@ -33,6 +33,7 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
+		//
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
