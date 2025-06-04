@@ -67,6 +67,9 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 放行 OPTIONS 请求
             .requestMatchers("/api/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/airports**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/flights/search").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/flights/**").permitAll()
             .anyRequest().authenticated()
         );
         
