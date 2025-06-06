@@ -11,9 +11,6 @@ import com.flight.flight_api.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    // 获取指定UserId的用户信息
-    UserEntity findByUserId(Long userId);
-
     // 检查邮箱是否已经被注册
     boolean existsByEmail(String email);
 

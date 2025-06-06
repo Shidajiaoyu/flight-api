@@ -1,10 +1,8 @@
 package com.flight.flight_api.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.flight.flight_api.dto.RegisterRequestDto;
-import com.flight.flight_api.dto.RegisterResponseDto;
-import com.flight.flight_api.dto.UserDto;
+import com.flight.flight_api.dto.LoginRequest;
+import com.flight.flight_api.dto.LoginResponse;
+import com.flight.flight_api.dto.RegisterRequest;
+import com.flight.flight_api.dto.RegisterResponse;
 import com.flight.flight_api.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -37,26 +36,25 @@ public class AuthController {
 
     // 用户登录
     @PostMapping("/login")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest in) {
         // infoLog
-        logger.info("Get users request initiated");
-        List<UserDto> users = new ArrayList<>();
-        // List<UserDto> users = authService.getAllUsers();
+        logger.info("Login request initiated");
+        LoginResponse out = authService.findUserByEmail(in.getEmail(), in.getPassword());
 
         // infoLog
-        logger.info("Get users request completed");
-        return ResponseEntity.ok(users);
+        logger.info("Login request completed");
+        return ResponseEntity.ok(out);
     }
 
     // 用户注册
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponseDto> createUsers(@RequestBody @Valid RegisterRequestDto in) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest in) {
         // infoLog
-        logger.info("Create user request initiated");
-        RegisterResponseDto out = authService.createUser(in.getUser());
+        logger.info("Register request initiated");
+        RegisterResponse out = authService.createUser(in.getUser());
 
         // infoLog
-        logger.info("Create user request completed");
-        return ResponseEntity.status(201).body(out);
+        logger.info("Register request completed");
+        return ResponseEntity.status(HttpStatus.CREATED).body(out);
     }
 }

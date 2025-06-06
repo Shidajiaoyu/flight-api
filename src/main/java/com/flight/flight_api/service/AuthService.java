@@ -1,11 +1,14 @@
 package com.flight.flight_api.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flight.flight_api.config.JwtUtil;
-import com.flight.flight_api.dto.RegisterResponseDto;
+import com.flight.flight_api.dto.LoginResponse;
+import com.flight.flight_api.dto.RegisterResponse;
 import com.flight.flight_api.dto.UserDto;
 import com.flight.flight_api.dto.UserMapper;
 import com.flight.flight_api.entity.UserEntity;
@@ -23,7 +26,7 @@ public class AuthService {
     private final UserMapper userMapper;
 
     // 构造体
-    // 注入userRepository
+    // 注入UserRepository等
     public AuthService(UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
@@ -35,7 +38,7 @@ public class AuthService {
     }
 
     // 把用户信息表里取到的数据转换成用户Dto
-    private RegisterResponseDto convertToRegisterResponse(UserEntity user) {
+    private RegisterResponse convertToRegisterResponse(UserEntity user) {
 
         if (null == user) {
             return null;
@@ -44,7 +47,7 @@ public class AuthService {
         UserDto userDto = userMapper.toUserDto(user);
         String token = jwtUtil.generateToken(user.getEmail());
 
-        RegisterResponseDto res = new RegisterResponseDto();
+        RegisterResponse res = new RegisterResponse();
         res.setUser(userDto);
         res.setToken(token);
 
@@ -63,28 +66,35 @@ public class AuthService {
         return user;
     }
 
-    // 获取所有的用户信息
-    // public List<UserDto> getAllUsers() {
-    // return
-    // userRepository.findAll().stream().map(this::mapper.toUserDto).collect(Collectors.toList());
-    // }
+    // 验证用户是否已注册
+    @Transactional
+    public LoginResponse findUserByEmail(String email, String password) {
+        Optional<UserEntity> user = userRepository.findByEmail(email);
 
-    // 获取指定UserId的用户信息
-    public boolean getUserByEmail(String email) {
+        // 用户不存在
+        if (!user.isPresent()) {
+            throw new ServiceException(2000, "The email or password you entered are incorrect‌");
+        }
 
-        return userRepository.existsByEmail(email);
-    }
+        UserEntity entity = user.get();
+        String encodedPassword = passwordEncoder.encode(password);
 
-    // 获取指定UserId的用户信息
-    public UserDto getUserByUserId(Long userId) {
+        if (passwordEncoder.matches(encodedPassword, entity.getPassword())) {
+            throw new ServiceException(2000, "The password you entered is incorrect‌");
+        }
 
-        UserEntity user = userRepository.findByUserId(userId);
-        return userMapper.toUserDto(user);
+        LoginResponse res = new LoginResponse();
+        res.setEmail(email);
+        res.setPassword(encodedPassword);
+        String token = jwtUtil.generateToken(email);
+        res.setToken(token);
+
+        return res;
     }
 
     // 用户注册信息登录
     @Transactional
-    public RegisterResponseDto createUser(UserDto userIn) {
+    public RegisterResponse createUser(UserDto userIn) {
 
         // 邮箱重复检查
         if (userRepository.existsByEmail(userIn.getEmail())) {
@@ -98,5 +108,4 @@ public class AuthService {
 
         return convertToRegisterResponse(newUser);
     }
-
 }
