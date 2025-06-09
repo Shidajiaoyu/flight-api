@@ -36,9 +36,8 @@ public class FlightService {
     @Transactional
     public FlightResponse getAllFlights(FlightRequest req) {
         List<FlightDto> flightDtos = flightRepository
-                .findByDepartureCityAndArrivalCityAndDepartureDateBetween(req.getDeparture(),
-                        req.getArrival(), DateUtil.safeStringToSqlDate(req.getDepartDate()),
-                        DateUtil.safeStringToSqlDate(req.getReturnDate()))
+                .findByDepartureCityAndArrivalCityAndDepartureDateAndCabin(req.getDeparture(),
+                        req.getArrival(), DateUtil.safeStringToSqlDate(req.getDepartDate()), req.getCabin())
                 .stream()
                 .map(flight -> flightMapper.toFlightDto(flight))
                 .collect(Collectors.toList());
@@ -48,6 +47,9 @@ public class FlightService {
             throw new ServiceException(3000, "No flight information available");
 
         FlightResponse res = new FlightResponse();
+        res.setDeparture(req.getDeparture());
+        res.setArrival(req.getArrival());
+        res.setPassengers(req.getPassengers());
         res.setFlights(flightDtos);
         return res;
     }

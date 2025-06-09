@@ -31,9 +31,13 @@ public class FlightEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightId;
 
-    // 单程/往返
+    // 航班号
     @Column(nullable = false, length = 10)
     private String flightNumber;
+
+    // 仓位
+    @Column(nullable = false, length = 1)
+    private String cabin;
 
     // 出发地机场Id
     @Column(nullable = false)

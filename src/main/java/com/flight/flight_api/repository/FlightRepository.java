@@ -17,19 +17,19 @@ public interface FlightRepository extends JpaRepository<FlightEntity, Long>,
                 JpaSpecificationExecutor<FlightEntity> {
 
         // 查找满足检索条件的航班信息
-        @Query(value = "SELECT f.* " +
-                        "FROM flight f " +
-                        "INNER JOIN airport d ON f.departure_airport_id = d.airport_id " +
-                        "INNER JOIN airport a ON f.destination_airport_id = a.airport_id " +
-                        "WHERE d.city = :departure " +
-                        "AND a.city = :arrival " +
-                        "AND f.departure_date = :departureDate " +
-                        "AND f.arrival_date = :arrivalDate", nativeQuery = true)
-        List<FlightEntity> findByDepartureCityAndArrivalCityAndDepartureDateBetween(
+        @Query(value = """
+                        SELECT f.* FROM flight f
+                        INNER JOIN airport d ON f.departure_airport_id = d.airport_id
+                        INNER JOIN airport a ON f.destination_airport_id = a.airport_id
+                        WHERE d.city = :departure
+                        AND a.city = :arrival
+                        AND f.departure_date = :departureDate
+                        AND f.cabin = :cabin""", nativeQuery = true)
+        List<FlightEntity> findByDepartureCityAndArrivalCityAndDepartureDateAndCabin(
                         @Param("departure") String departure,
                         @Param("arrival") String arrival,
                         @Param("departureDate") Date departureDate,
-                        @Param("arrivalDate") Date arrivalDate);
+                        @Param("cabin") String cabin);
 
         // 获取指定id的航班信息
         FlightEntity findByFlightId(Long flightId);

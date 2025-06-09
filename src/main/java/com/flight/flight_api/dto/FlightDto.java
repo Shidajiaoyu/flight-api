@@ -16,6 +16,9 @@ public class FlightDto {
     // 航班号
     private String flightNumber;
 
+    // 仓位
+    private String cabin;
+
     // 出发地机场Id
     private Long departureAirportId;
 
