@@ -31,7 +31,7 @@ public class FlightController {
 
     // 获取所有航班信息
     @PostMapping()
-    public ResponseEntity<FlightResponse> getAllFlights(@RequestBody @Valid FlightRequest in) {
+    public ResponseEntity<FlightResponse> getAllFlights(@Valid @RequestBody FlightRequest in) {
         // 获取所有航班信息
         FlightResponse out = flightService.getAllFlights(in);
 

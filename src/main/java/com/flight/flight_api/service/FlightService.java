@@ -34,22 +34,23 @@ public class FlightService {
 
     // 检索航班信息
     @Transactional
-    public FlightResponse getAllFlights(FlightRequest req) {
+    public FlightResponse getAllFlights(FlightRequest request) {
         List<FlightDto> flightDtos = flightRepository
-                .findByDepartureCityAndArrivalCityAndDepartureDateAndCabin(req.getDeparture(),
-                        req.getArrival(), DateUtil.safeStringToSqlDate(req.getDepartDate()), req.getCabin())
+                .findByDepartureCityAndArrivalCityAndDepartureDateAndCabin(request.getDeparture(),
+                        request.getArrival(), DateUtil.safeStringToSqlDate(request.getDepartDate()),
+                        request.getCabinClass())
                 .stream()
                 .map(flight -> flightMapper.toFlightDto(flight))
                 .collect(Collectors.toList());
 
         // 没有取到任何信息
         if (flightDtos == null || flightDtos.size() == 0)
-            throw new ServiceException(3000, "No flight information available");
+            throw new ServiceException(2000, "No flight information available");
 
         FlightResponse res = new FlightResponse();
-        res.setDeparture(req.getDeparture());
-        res.setArrival(req.getArrival());
-        res.setPassengers(req.getPassengers());
+        res.setDeparture(request.getDeparture());
+        res.setArrival(request.getArrival());
+        res.setPassengers(request.getPassengers());
         res.setFlights(flightDtos);
         return res;
     }
@@ -61,7 +62,7 @@ public class FlightService {
 
         // 没有取到任何信息
         if (entity == null)
-            throw new ServiceException(3000, "No flight information available");
+            throw new ServiceException(2001, "No flight information available");
 
         FlightDto dto = flightMapper.toFlightDto(entity);
         FlightResponse res = new FlightResponse();

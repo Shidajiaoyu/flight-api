@@ -1,12 +1,16 @@
 package com.flight.flight_api.service;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flight.flight_api.config.JwtUtil;
+import com.flight.flight_api.dto.AuthResponse;
 import com.flight.flight_api.dto.LoginResponse;
 import com.flight.flight_api.dto.RegisterResponse;
 import com.flight.flight_api.dto.UserDto;
@@ -66,32 +70,6 @@ public class AuthService {
         return user;
     }
 
-    // 验证用户是否已注册
-    @Transactional
-    public LoginResponse findUserByEmail(String email, String password) {
-        Optional<UserEntity> user = userRepository.findByEmail(email);
-
-        // 用户不存在
-        if (!user.isPresent()) {
-            throw new ServiceException(2000, "The email or password you entered are incorrect‌");
-        }
-
-        UserEntity entity = user.get();
-        String encodedPassword = passwordEncoder.encode(password);
-
-        if (passwordEncoder.matches(encodedPassword, entity.getPassword())) {
-            throw new ServiceException(2000, "The password you entered is incorrect‌");
-        }
-
-        LoginResponse res = new LoginResponse();
-        res.setEmail(email);
-        res.setPassword(encodedPassword);
-        String token = jwtUtil.generateToken(email);
-        res.setToken(token);
-
-        return res;
-    }
-
     // 用户注册信息登录
     @Transactional
     public RegisterResponse createUser(UserDto userIn) {
@@ -107,5 +85,53 @@ public class AuthService {
         UserEntity newUser = userRepository.save(convertToEntity(userIn));
 
         return convertToRegisterResponse(newUser);
+    }
+
+    // 验证用户是否已注册
+    @Transactional
+    public LoginResponse findUserByEmail(String email, String password) {
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+
+        // 用户不存在
+        if (!user.isPresent()) {
+            throw new ServiceException(1001, "The email or password you entered are incorrect‌");
+        }
+
+        UserEntity entity = user.get();
+        String encodedPassword = passwordEncoder.encode(password);
+
+        if (passwordEncoder.matches(encodedPassword, entity.getPassword())) {
+            throw new ServiceException(1002, "The password you entered is incorrect‌");
+        }
+
+        LoginResponse res = new LoginResponse();
+        res.setEmail(email);
+        res.setPassword(encodedPassword);
+        String token = jwtUtil.generateToken(email);
+        res.setToken(token);
+
+        return res;
+    }
+
+    public AuthResponse checkAuthentication(Authentication auth) {
+
+        AuthResponse authResponse = new AuthResponse();
+
+        if (auth != null &&
+                auth.isAuthenticated() &&
+                !(auth instanceof AnonymousAuthenticationToken)) {
+            authResponse.setAuthenticated(true);
+            authResponse.setUsername(auth.getName());
+            authResponse.setAuthorities(
+                    auth.getAuthorities().stream()
+                            .map(grantedAuthority -> grantedAuthority.getAuthority())
+                            .toList());
+        } else {
+            authResponse.setAuthenticated(false);
+            authResponse.setUsername(null);
+            authResponse.setAuthorities(List.of());
+        }
+
+        return authResponse;
     }
 }

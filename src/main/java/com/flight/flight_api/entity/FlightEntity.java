@@ -12,16 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // 航班信息表定义
 @Entity
 @Table(name = "flight")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlightEntity {
@@ -37,7 +35,7 @@ public class FlightEntity {
 
     // 仓位
     @Column(nullable = false, length = 1)
-    private String cabin;
+    private String cabinClass;
 
     // 出发地机场Id
     @Column(nullable = false)
@@ -65,7 +63,7 @@ public class FlightEntity {
 
     // 价格
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;
+    private BigDecimal price;
 
     // 订单信息
     @OneToMany(mappedBy = "flight")

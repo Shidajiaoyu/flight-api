@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.flight.flight_api.entity.FlightEntity;
 
-// 航班表操作
+// 航班信息表操作
 @Repository
 public interface FlightRepository extends JpaRepository<FlightEntity, Long>,
                 JpaSpecificationExecutor<FlightEntity> {
@@ -24,12 +24,12 @@ public interface FlightRepository extends JpaRepository<FlightEntity, Long>,
                         WHERE d.city = :departure
                         AND a.city = :arrival
                         AND f.departure_date = :departureDate
-                        AND f.cabin = :cabin""", nativeQuery = true)
+                        AND f.cabin_class = :cabinClass""", nativeQuery = true)
         List<FlightEntity> findByDepartureCityAndArrivalCityAndDepartureDateAndCabin(
                         @Param("departure") String departure,
                         @Param("arrival") String arrival,
                         @Param("departureDate") Date departureDate,
-                        @Param("cabin") String cabin);
+                        @Param("cabinClass") String cabinClass);
 
         // 获取指定id的航班信息
         FlightEntity findByFlightId(Long flightId);

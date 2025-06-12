@@ -8,7 +8,7 @@ import lombok.Data;
 public class FlightRequest {
 
     // 仓位
-    private String cabin = "0";
+    private String cabinClass = "0";
 
     // 出发地
     @NotBlank(message = "Departure cannot be empty")

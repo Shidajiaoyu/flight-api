@@ -30,7 +30,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 关键配置
                 .csrf(csrf -> csrf.disable()) // 禁用CSRF保护
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/auth/**", "/api/flights/**", "/swagger-ui/**", "/v3/api-docs/**")
+                        .requestMatchers("/api/auth/**", "/api/flights/**", "/api/bookings/**", "/swagger-ui/**",
+                                "/v3/api-docs/**")
                         .permitAll() // 开放认证接口
                         .anyRequest().authenticated())
                 .addFilterBefore(

@@ -17,7 +17,7 @@ public class FlightDto {
     private String flightNumber;
 
     // 仓位
-    private String cabin;
+    private String cabinClass;
 
     // 出发地机场Id
     private Long departureAirportId;
@@ -38,6 +38,6 @@ public class FlightDto {
     private Time arrivalTime;
 
     // 价格
-    private BigDecimal totalPrice;
+    private BigDecimal price;
 
 }

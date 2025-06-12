@@ -1,13 +1,10 @@
 package com.flight.flight_api.utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 // 日期格式转换
 @Component
