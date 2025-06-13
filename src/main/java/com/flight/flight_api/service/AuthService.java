@@ -49,7 +49,7 @@ public class AuthService {
         }
 
         UserDto userDto = userMapper.toUserDto(user);
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateAccessToken(user.getEmail());
 
         RegisterResponse res = new RegisterResponse();
         res.setUser(userDto);
@@ -90,24 +90,25 @@ public class AuthService {
     // 验证用户是否已注册
     @Transactional
     public LoginResponse findUserByEmail(String email, String password) {
+
         Optional<UserEntity> user = userRepository.findByEmail(email);
 
         // 用户不存在
         if (!user.isPresent()) {
-            throw new ServiceException(1001, "The email or password you entered are incorrect‌");
+            throw new ServiceException(1002, "The email or password you entered are incorrect‌");
         }
 
         UserEntity entity = user.get();
         String encodedPassword = passwordEncoder.encode(password);
 
         if (passwordEncoder.matches(encodedPassword, entity.getPassword())) {
-            throw new ServiceException(1002, "The password you entered is incorrect‌");
+            throw new ServiceException(1003, "The password you entered is incorrect‌");
         }
 
         LoginResponse res = new LoginResponse();
         res.setEmail(email);
         res.setPassword(encodedPassword);
-        String token = jwtUtil.generateToken(email);
+        String token = jwtUtil.generateAccessToken(email);
         res.setToken(token);
 
         return res;

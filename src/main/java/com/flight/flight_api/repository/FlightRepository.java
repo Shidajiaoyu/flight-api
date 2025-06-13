@@ -24,7 +24,8 @@ public interface FlightRepository extends JpaRepository<FlightEntity, Long>,
                         WHERE d.city = :departure
                         AND a.city = :arrival
                         AND f.departure_date = :departureDate
-                        AND f.cabin_class = :cabinClass""", nativeQuery = true)
+                        AND f.cabin_class = :cabinClass
+                        ORDER BY f.departure_date""", nativeQuery = true)
         List<FlightEntity> findByDepartureCityAndArrivalCityAndDepartureDateAndCabin(
                         @Param("departure") String departure,
                         @Param("arrival") String arrival,

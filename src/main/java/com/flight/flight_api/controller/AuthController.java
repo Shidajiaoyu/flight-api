@@ -1,12 +1,9 @@
 package com.flight.flight_api.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -46,6 +43,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest in) {
         // infoLog
         logger.info("Login request initiated");
+
         LoginResponse out = authService.findUserByEmail(in.getEmail(), in.getPassword());
 
         // infoLog
