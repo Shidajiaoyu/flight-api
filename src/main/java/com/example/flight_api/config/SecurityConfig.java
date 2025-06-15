@@ -1,4 +1,5 @@
 package com.example.flight_api.config;
+
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		// CORS PROCESS
@@ -27,10 +27,10 @@ public class SecurityConfig {
 		.cors(cors -> cors
                 .configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-                    corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+                    corsConfiguration.setAllowedMethods(List.of("*"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
 		// API PROTECTED
@@ -39,7 +39,6 @@ public class SecurityConfig {
 		          .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated());
 		return http.build();
-
 	}
 
 	@Bean
@@ -52,5 +51,4 @@ public class SecurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 }
