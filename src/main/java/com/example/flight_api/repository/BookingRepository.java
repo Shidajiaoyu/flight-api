@@ -24,7 +24,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = "SELECT * FROM booking bk " +
             "WHERE bk.user_id = :userId AND bk.status = :status " +
-            "ORDER BY bk.booking_time ASC", countQuery = "SELECT count(*) FROM Booking bk WHERE bk.user_id = :userId AND bk.status = :status", nativeQuery = true)
+            "ORDER BY bk.booking_time ASC", countQuery = "SELECT count(*) FROM booking bk WHERE bk.user_id = :userId AND bk.status = :status", nativeQuery = true)
     Page<Booking> findByUserIdandStatus(
             @Param("userId") Long userId,
             @Param("status") String status,
