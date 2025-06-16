@@ -15,4 +15,7 @@ public class ErrorResponse {
 
     // 异常信息
     private String message;
+
+    // 异常详情
+    private String details;
 }

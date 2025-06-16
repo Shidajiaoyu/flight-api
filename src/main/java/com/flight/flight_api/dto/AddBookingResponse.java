@@ -8,6 +8,9 @@ import lombok.Data;
 @Data
 public class AddBookingResponse {
 
+    // 订单号
+    private String bookingId;
+
     // 总价格(不含税)
     private BigDecimal totalPrice;
 

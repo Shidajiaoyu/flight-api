@@ -90,4 +90,23 @@ public class BookingMapper {
         dto.setDepartureTime((Time) row[7]);
         return dto;
     }
+
+    // 把订单信息表里取到的数据转换成订单信息Dto
+    public BookingDto toBookingDto(BookingEntity entity) {
+        BookingDto dto = new BookingDto();
+
+        // 订单号
+        dto.setBookingId(entity.getBookingId());
+
+        // 参考号
+        dto.setReference(entity.getReference());
+
+        // 订单状态
+        dto.setStatus(entity.getStatus());
+
+        // 完成时间
+        dto.setCompleteTime(entity.getCompleteTime());
+
+        return dto;
+    };
 }

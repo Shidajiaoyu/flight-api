@@ -106,6 +106,7 @@ public class AuthService {
         }
 
         LoginResponse res = new LoginResponse();
+        res.setUserId(entity.getUserId());
         res.setEmail(email);
         res.setPassword(encodedPassword);
         String token = jwtUtil.generateAccessToken(email);

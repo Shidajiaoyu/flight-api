@@ -1,6 +1,7 @@
 package com.flight.flight_api.service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import com.flight.flight_api.dto.AddBookingResponse;
 import com.flight.flight_api.dto.BookingDto;
 import com.flight.flight_api.dto.BookingMapper;
 import com.flight.flight_api.dto.PassengerDto;
+import com.flight.flight_api.dto.UpdateBookingStatusResponse;
 import com.flight.flight_api.entity.BookingEntity;
 import com.flight.flight_api.entity.FlightEntity;
 import com.flight.flight_api.entity.PassengerEntity;
@@ -29,6 +31,7 @@ import com.flight.flight_api.repository.FlightRepository;
 import com.flight.flight_api.repository.PassengerRepository;
 import com.flight.flight_api.repository.UserRepository;
 import com.flight.flight_api.utils.AppConstants;
+import com.flight.flight_api.utils.BookingStatus;
 
 // 订单相关操作
 @Service
@@ -135,6 +138,7 @@ public class BookingService {
 
         // 返回订单
         AddBookingResponse res = new AddBookingResponse();
+        res.setBookingId(bookingId);
         res.setTotalPrice(totalPrice);
         res.setOtherFee(otherFee);
         return res;
@@ -162,5 +166,43 @@ public class BookingService {
         }
 
         return result.map(bookingMapper::mapToBookingDto);
+    }
+
+    // 更新订单状态
+    public UpdateBookingStatusResponse updateBookingStatus(String bookingId, BookingStatus newStatus) {
+
+        // 查询订单
+        List<BookingEntity> bookingEntities = bookingRepository.findByBookingId(bookingId);
+        List<BookingDto> bookings = new ArrayList<BookingDto>();
+
+        // 检查订单是否存在
+        if (bookingEntities.isEmpty()) {
+            throw new ServiceException(3006, "Booking not found with number: " + bookingId);
+        }
+
+        // 获取订单实体
+        BookingEntity bookingEntity = bookingEntities.get(0);
+
+        // 订单状态流转验证
+        String currentStatusStr = bookingEntity.getStatus();
+        BookingStatus currentStatus = BookingStatus.fromValue(currentStatusStr);
+        BookingStatusMachine.validateTransition(currentStatus, newStatus);
+
+        // 更新订单状态
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        for (BookingEntity entity : bookingEntities) {
+            entity.setStatus(newStatus.getValue());
+            // 订单完成的时候更新完成时间
+            if (BookingStatus.DELIVERED.equals(newStatus)) {
+                entity.setCompleteTime(currentTime);
+            }
+            bookingRepository.save(entity);
+            bookings.add(bookingMapper.toBookingDto(entity));
+        }
+
+        UpdateBookingStatusResponse res = new UpdateBookingStatusResponse();
+        res.setBookingId(bookingId);
+
+        return res;
     }
 }
