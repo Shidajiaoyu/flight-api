@@ -44,6 +44,7 @@ public class JwtUtil {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
+    // create a token
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
@@ -72,6 +73,7 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    // Extract all claims from the token
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
@@ -81,6 +83,7 @@ public class JwtUtil {
                 .getBody();
     }
 
+    // Get the signing key from the secret key
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

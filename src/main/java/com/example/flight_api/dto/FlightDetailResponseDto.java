@@ -32,5 +32,7 @@ public class FlightDetailResponseDto {
 
     private BigDecimal totalfare;
 
+    private Long flightId;
+ 
 }
 

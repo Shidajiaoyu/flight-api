@@ -18,6 +18,9 @@ public class AirportGetController {
     @Autowired
     private AirportGetService airportGetService;
 
+    /**
+     * Get all airports information.
+     */
     @GetMapping("/airports")
     public BaseResponse<List<AirportResponseDto>> getAirports(){
 

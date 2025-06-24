@@ -22,6 +22,11 @@ public class FlightSearchController {
     @Autowired
     private FlightSearchService flightSearchService;
 
+    /**
+     * Get flights information based on search criteria.
+     * @param flightSearchRequestDto
+     * @return BaseResponse with flight search results
+     */
     @PostMapping("/flights")
     public BaseResponse<FlightSearchResponseDto> getFlightsInfo(@RequestBody FlightSearchRequestDto flightSearchRequestDto) {
 
@@ -31,6 +36,11 @@ public class FlightSearchController {
 
     }
 
+    /**
+     * Get flight details by flight ID.
+     * @param id
+     * @return BaseResponse with flight detail information
+     */
     @GetMapping("/flights/{id}")
     public BaseResponse<FlightDetailResponseDto> getFlightsDetail(@PathVariable Long id){
 

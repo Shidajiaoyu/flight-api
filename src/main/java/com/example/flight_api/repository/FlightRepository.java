@@ -17,24 +17,28 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
             "and f.departure_date=?3", nativeQuery = true)
     List<Flight> findByCondition(String fromCity, String toCity, LocalDate data);
 
-    @Query(value = "select" + 
-                " dep.city," + 
-                " des.city," + 
-                " f.departure_date," + 
-                " f.departure_time," + 
-                " f.destination_date," + 
-                " f.destination_time," + 
-                " f.position_level," + 
-                " f.price," + 
-                " f.tax" + 
-                " from" + 
-                " flight f " + 
-                " inner join airport dep on" + 
-                " f.departure_airport_id = dep.airport_id" + 
-                " inner join airport des on " + 
-                " f.destination_airport_id = des.airport_id " + 
-                " where" + 
-                " flight_id = ?1", nativeQuery = true)
+    @Query(value = "select" +
+            " dep.city," +
+            " des.city," +
+            " f.departure_date," +
+            " f.departure_time," +
+            " f.destination_date," +
+            " f.destination_time," +
+            " f.position_level," +
+            " f.price," +
+            " f.tax," +
+            " f.flight_id "+
+            " from" +
+            " flight f " +
+            " inner join airport dep on" +
+            " f.departure_airport_id = dep.airport_id" +
+            " inner join airport des on " +
+            " f.destination_airport_id = des.airport_id " +
+            " where" +
+            " flight_id = ?1", nativeQuery = true)
     Object[] findByConditionForDetail(Long id);
+
+    @Query(value = "select * from flight f where  f.flight_id = ?1", nativeQuery = true)
+    Flight findByFlight_id(Long flight_id);
 
 }

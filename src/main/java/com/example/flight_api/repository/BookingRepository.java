@@ -12,16 +12,6 @@ import com.example.flight_api.entity.Booking;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    // get bookings
-    // @Query(value = "SELECT * FROM Booking bk " +
-    // " WHERE bk.user_id = :userId" +
-    // " and bk.status = :status" +
-    // " order by" +
-    // " bk.booking_time asc ",
-    // nativeQuery = true)
-    // Page<Booking> findByUserIdandStatus(@Param("userId") Long userId,
-    // @Param("status") String status, Pageable pageable);
-
     @Query(value = "SELECT * FROM booking bk " +
             "WHERE bk.user_id = :userId AND bk.status = :status " +
             "ORDER BY bk.booking_time ASC", countQuery = "SELECT count(*) FROM booking bk WHERE bk.user_id = :userId AND bk.status = :status", nativeQuery = true)

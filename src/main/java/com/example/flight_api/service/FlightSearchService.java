@@ -104,6 +104,7 @@ public class FlightSearchService {
         flightDetailResponseDto.setBasefare(basefare);
         flightDetailResponseDto.setTaxfare(taxfare);
         flightDetailResponseDto.setTotalfare(totalfare);
+        flightDetailResponseDto.setFlightId((Long)flights[9]);
         return flightDetailResponseDto;
     }
 
@@ -142,5 +143,9 @@ public class FlightSearchService {
         flightDto.setDestinationTimestamp(localDateTimeDes);
         flightDto.setPosition_level(flights[6].toString());
         return flightDto;
+    }
+
+    public Flight getFlightById(Long flightId) {
+        return flightRepository.findByFlight_id(flightId);
     }
 }
