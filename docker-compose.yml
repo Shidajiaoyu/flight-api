@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  #mysql image
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    #set values for mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pass123$
+      MYSQL_DATABASE: flight_db
+    ports:
+    # Expose MySQL port()
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  #flght-api image
+  flight-api:
+    build: .
+    container_name: flight-api
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      #prefix > jdbc:mysql:
+      #2nd mysql > 上边的mysql
+      SPRING_DATABASE_URL: jdbc:mysql://mysql:3306/flight_db
+      SPRING_DATABASE_USERNAME: root
+      SPRING_DATABASE_PASSWORD: pass123$
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SQL_INIT_MODE: always
+ 
+volumes:
+  mysql_data:
+ 
+ 
+ 
